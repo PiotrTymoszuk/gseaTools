@@ -1,0 +1,23 @@
+Package: gseaTools
+Type: Package
+Title: Tools for Import and Transformation of Gene Set Enrichment Analysis 
+    Signatures
+Version: 0.1.0
+Maintainer: Piotr Tymoszuk <piotr.s.tymoszuk@gmail.com>
+Description: Tools for import, searching and score calculation for GSEA 
+    signatures.
+License: What license is it under?
+Encoding: UTF-8
+LazyData: true
+Imports: 
+    dplyr,
+    GSVA,
+    purrr,
+    rlang,
+    stringi,
+    tibble,
+    utils
+Authors@R: 
+    person("Piotr", "Tymoszuk", , "piotr.s.tymoszuk@gmail.com", role = c("aut", "cre"),
+           comment = c(ORCID = "0000-0002-0398-6034"))
+RoxygenNote: 7.1.1
