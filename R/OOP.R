@@ -129,13 +129,12 @@
 
     ## expression
 
-    expr_mtx <- gseaTools::as_exprs_matrix(data = data,
-                                           container = x)
+    expr_mtx <- gseaTools::as_exprs_matrix(data)
 
     ## calculation
 
     scores <- GSVA::gsva(expr = expr_mtx,
-                         gset.idx.list = x)
+                         gset.idx.list = x, ...)
 
     ## formatting
 

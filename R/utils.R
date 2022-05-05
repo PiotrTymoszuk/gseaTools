@@ -24,11 +24,10 @@
 #' columns represent the samples.
 #' @param data a data frame, column names should contain gene names or
 #' identifiers.
-#' @param container a dbsig database object or a list with the
 #' gene name vectors.
 #' @export
 
-  as_exprs_matrix <- function(data, container) {
+  as_exprs_matrix <- function(data) {
 
     ## entry control
 
@@ -38,53 +37,9 @@
 
     }
 
-    if(!gseaTools::is_dbsig(container)) {
-
-      if(!is.list(container)) {
-
-        stop('Please provide a valid dbsig object or a list with gene names.',
-             call. = FALSE)
-
-      }
-
-    }
-
-    ## unique gene names/identifiers
-
-    if(gseaTools::is_dbsig(container)) {
-
-      all_genes <- purrr::reduce(container[['genes']], union)
-
-    } else {
-
-      all_genes <- purrr::reduce(container, union)
-
-    }
-
-    missing_genes <- all_genes[!all_genes %in% names(data)]
-
-    if(length(missing_genes) > 0) {
-
-      if(length(missing_genes) > 10) {
-
-        miss_txt <- paste0(paste(missing_genes[1:10], collapse = ', '), ', ...')
-
-      } else {
-
-        miss_txt <- paste(missing_genes, collapse = ', ')
-
-      }
-
-      warning(paste(length(missing_genes),
-                    'genes missing from data:',
-                    miss_txt),
-              call. = FALSE)
-
-    }
-
     ## output
 
-    t(data[names(data) %in% all_genes])
+    t(data)
 
   }
 

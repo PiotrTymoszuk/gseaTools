@@ -4,13 +4,11 @@
 \alias{as_exprs_matrix}
 \title{Create an expression matrix.}
 \usage{
-as_exprs_matrix(data, container)
+as_exprs_matrix(data)
 }
 \arguments{
 \item{data}{a data frame, column names should contain gene names or
-identifiers.}
-
-\item{container}{a dbsig database object or a list with the
+identifiers.
 gene name vectors.}
 }
 \value{
