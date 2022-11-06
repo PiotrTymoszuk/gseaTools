@@ -42,19 +42,6 @@
 
 # Generics -----
 
-#' Calculate object statistic.
-#'
-#' @description Calculate object statistics.
-#' @param x an object.
-#' @param ... arguments passed to the methods.
-#' @export
-
-  calculate <- function(x, ...) {
-
-    UseMethod('calculate', x)
-
-  }
-
 #' Search for a database entry.
 #'
 #' @description Search for a database entry.
@@ -64,7 +51,7 @@
 
   search <- function(x, ...) {
 
-    UseMethod('search', x)
+    UseMethod('search')
 
   }
 
@@ -117,11 +104,12 @@
 #' function, given a character vector with gene names and a data frame with
 #' expression values.
 #' @details See: \code{\link[GSVA]{gsva}}.
-#' @param x a list with gene name/identifier vectors.
+#' @param x a list with gene name/identifier vectors or a dbsig object.
 #' @param data a data frame with the expression values.
 #' @param ... extra arguments passed to \code{\link[GSVA]{gsva}}.
 #' @return A data frame with GSVA enrichment scores:
 #' rows are samples, columns are scores.
+#' @importFrom generics calculate
 #' @export calculate.default
 #' @export
 
@@ -144,16 +132,7 @@
 
   }
 
-#' Calculate GSVA scores.
-#'
-#' @description Calculates multi-gene scores via \code{\link[GSVA]{gsva}}
-#' function, given a character vector with gene names and a data frame with
-#' expression values.
-#' @details See: \code{\link[GSVA]{gsva}}.
-#' @param x a dbsig object.
-#' @inheritParams calculate.default
-#' @return A data frame with GSVA enrichment scores:
-#' rows are samples, columns are scores.
+#' @rdname calculate.default
 #' @export calculate.dbsig
 #' @export
 
