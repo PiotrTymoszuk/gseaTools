@@ -2,15 +2,27 @@
 % Please edit documentation in R/OOP.R
 \name{search}
 \alias{search}
+\alias{search.dbsig}
 \title{Search for a database entry.}
 \usage{
 search(x, ...)
+
+\method{search}{dbsig}(x, key = c("sign_name", "genes", "sign_link"), value = ".*", ...)
 }
 \arguments{
-\item{x}{an object.}
+\item{x}{a dbsig object.}
 
 \item{...}{arguments passed to the methods.}
+
+\item{key}{the dbsig database field, see description. 'sign_name' by default.}
+
+\item{value}{a regular expression used to filter the database.}
+}
+\value{
+a dbsig object.
 }
 \description{
-Search for a database entry.
+Filters entries of a dbsig database with a regular expression.
+The fields available for searching are 'genes', 'sign_name'
+(official signature name) and 'sign_link' (signature URL).
 }

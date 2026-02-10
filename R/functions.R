@@ -14,7 +14,7 @@
 
     ## entry control
 
-    if(!stringi::stri_detect(path, fixed = '.gmt')) {
+    if(!stri_detect(path, fixed = '.gmt')) {
 
       stop('Please provide a path to a valid .gmt file', call. = FALSE)
 
@@ -29,18 +29,20 @@
 
     message('Reading the signature database')
 
-    db <- tibble::as_tibble(utils::read.csv(path,
-                                            header = FALSE,
-                                            sep = '\t'))
+    db <- as_tibble(read.csv(path,
+                             header = FALSE,
+                             sep = '\t'))
 
     message(paste('Clearing', nrow(db), 'database records'))
 
-    gene_lst <- purrr::map(1:nrow(db),
-                           ~gseaTools:::empty_null_(db[.x, 3:ncol(db)]))
+    gene_lst <- map(1:nrow(db),
+                    ~empty_null_(db[.x, 3:ncol(db)]))
 
-    db <- rlang::set_names(db[1:2],
-                           c('sign_name', 'sign_link'))
+    db <- set_names(db[1:2],
+                    c('sign_name', 'sign_link'))
 
-    gseaTools::dbsig(dplyr::mutate(db, genes = gene_lst))
+    genes <- NULL
+
+    dbsig(mutate(db, genes = gene_lst))
 
   }

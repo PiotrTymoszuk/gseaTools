@@ -13,15 +13,14 @@
 
   dbsig <- function(x) {
 
-    if(!tibble::is_tibble(x)) {
+    if(!is_tibble(x)) {
 
       stop('Please provide a valid data tibble.',
            call. = FALSE)
 
     }
 
-    structure(x,
-              class = c('dbsig', 'tbl_df', 'tbl', 'data.frame'))
+    structure(x, class = c('dbsig', 'tbl_df', 'tbl', 'data.frame'))
 
   }
 
@@ -34,48 +33,38 @@
 #' @return a logical value.
 #' @export
 
-  is_dbsig <- function(x) {
-
-    any(class(x) == 'dbsig')
-
-  }
+  is_dbsig <- function(x) any(class(x) == 'dbsig')
 
 # Generics -----
 
 #' Search for a database entry.
 #'
-#' @description Search for a database entry.
-#' @param x an object.
-#' @param ... arguments passed to the methods.
-#' @export
-
-  search <- function(x, ...) {
-
-    UseMethod('search')
-
-  }
-
-# Extraction methods ------
-
-#' Search in the dbsig database with a text expression.
-#'
 #' @description Filters entries of a dbsig database with a regular expression.
 #' The fields available for searching are 'genes', 'sign_name'
 #' (official signature name) and 'sign_link' (signature URL).
-#' @return a dbsig object.
+#'
 #' @param x a dbsig object.
 #' @param key the dbsig database field, see description. 'sign_name' by default.
 #' @param value a regular expression used to filter the database.
+#' @param ... arguments passed to the methods.
+#'
+#' @return a dbsig object.
+#'
+#' @export
+
+  search <- function(x, ...) UseMethod('search')
+
+#' @rdname search
 #' @export search.dbsig
 #' @export
 
   search.dbsig <- function(x,
                            key = c('sign_name', 'genes', 'sign_link'),
-                           value = '.*') {
+                           value = '.*', ...) {
 
     ## entry control
 
-    stopifnot(gseaTools::is_dbsig(x))
+    stopifnot(is_dbsig(x))
 
     key <- match.arg(key[1], c('sign_name', 'genes', 'sign_link'))
 
@@ -83,14 +72,14 @@
 
     if(key %in% c('sign_name', 'sign_link')) {
 
-      dplyr::filter(x, stringi::stri_detect(.data[[key]], regex = value))
+      filter(x, stri_detect(.data[[key]], regex = value))
 
     } else if(key == 'genes') {
 
-      pos_records <- purrr::map_lgl(x[['genes']],
-                                    ~any(stringi::stri_detect(.x, regex = value)))
+      pos_records <- map_lgl(x[['genes']],
+                             ~any(stri_detect(.x, regex = value)))
 
-      dplyr::filter(x, pos_records)
+      filter(x, pos_records)
 
     }
 
@@ -106,29 +95,39 @@
 #' @details See: \code{\link[GSVA]{gsva}}.
 #' @param x a list with gene name/identifier vectors or a dbsig object.
 #' @param data a data frame with the expression values.
-#' @param ... extra arguments passed to \code{\link[GSVA]{gsva}}.
+#' @param id_col name of the column to store identifiers/names of the samples
+#' in the output data frames.
+#' @param ... extra arguments passed to \code{\link[GSVA]{gsvaParam}}.
 #' @return A data frame with GSVA enrichment scores:
 #' rows are samples, columns are scores.
 #' @importFrom generics calculate
 #' @export calculate.default
 #' @export
 
-  calculate.default <- function(x, data, ...) {
+  calculate.default <- function(x, data, id_col = "sample_id", ...) {
 
     ## expression
 
-    expr_mtx <- gseaTools::as_exprs_matrix(data)
+    expr_mtx <- as_exprs_matrix(data)
 
     ## calculation
 
-    scores <- GSVA::gsva(expr = expr_mtx,
-                         gset.idx.list = x, ...)
+    gsva_input <- gsvaParam(exprData = expr_mtx,
+                            geneSets = x, ...)
+
+    scores <- gsva(gsva_input)
 
     ## formatting
 
     scores <- as.data.frame(t(scores))
 
-    tibble::as_tibble(scores, .name_repair = 'universal')
+    if(!is.null(rownames(scores))) {
+
+      scores <- rownames_to_column(scores, id_col)
+
+    }
+
+    as_tibble(scores, .name_repair = 'universal')
 
   }
 
@@ -136,14 +135,15 @@
 #' @export calculate.dbsig
 #' @export
 
-  calculate.dbsig <- function(x, data, ...) {
+  calculate.dbsig <- function(x, data, id_col = "sample_id", ...) {
 
-    stopifnot(gseaTools::is_dbsig(x))
+    stopifnot(is_dbsig(x))
 
-    gene_container <- rlang::set_names(x[['genes']],
-                                       x[['sign_name']])
+    gene_container <- set_names(x[['genes']], x[['sign_name']])
 
-    gseaTools::calculate.default(x = gene_container, data = data, ...)
+    calculate.default(x = gene_container,
+                      data = data,
+                      id_col = id_col, ...)
 
   }
 

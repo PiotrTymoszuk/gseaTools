@@ -5,16 +5,19 @@
 \alias{calculate.dbsig}
 \title{Calculate GSVA scores.}
 \usage{
-\method{calculate}{default}(x, data, ...)
+\method{calculate}{default}(x, data, id_col = "sample_id", ...)
 
-\method{calculate}{dbsig}(x, data, ...)
+\method{calculate}{dbsig}(x, data, id_col = "sample_id", ...)
 }
 \arguments{
 \item{x}{a list with gene name/identifier vectors or a dbsig object.}
 
 \item{data}{a data frame with the expression values.}
 
-\item{...}{extra arguments passed to \code{\link[GSVA]{gsva}}.}
+\item{id_col}{name of the column to store identifiers/names of the samples
+in the output data frames.}
+
+\item{...}{extra arguments passed to \code{\link[GSVA]{gsvaParam}}.}
 }
 \value{
 A data frame with GSVA enrichment scores:
