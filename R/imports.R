@@ -15,7 +15,11 @@
 #'
 #' @importFrom stringi stri_detect
 #'
+#' @importFrom generics calculate
+#'
 #' @importFrom utils read.csv
+#'
+#' @importFrom BiocParallel SerialParam
 #'
 #' @importFrom GSVA gsva
 #' @importFrom GSVA gsvaParam

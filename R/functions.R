@@ -35,6 +35,8 @@
 
     message(paste('Clearing', nrow(db), 'database records'))
 
+
+
     gene_lst <- map(1:nrow(db),
                     ~empty_null_(db[.x, 3:ncol(db)]))
 

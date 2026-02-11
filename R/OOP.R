@@ -93,18 +93,28 @@
 #' function, given a character vector with gene names and a data frame with
 #' expression values.
 #' @details See: \code{\link[GSVA]{gsva}}.
+#'
 #' @param x a list with gene name/identifier vectors or a dbsig object.
 #' @param data a data frame with the expression values.
 #' @param id_col name of the column to store identifiers/names of the samples
 #' in the output data frames.
+#' @param BPPARAM An object of class BiocParallelParam
+#' (https://www.bioconductor.org/packages//release/bioc/vignettes/BiocParallel/inst/doc/Introduction_To_BiocParallel.html)
+#' with parameters of paralellization used by \code{\link[GSVA]{gsva}}.
 #' @param ... extra arguments passed to \code{\link[GSVA]{gsvaParam}}.
 #' @return A data frame with GSVA enrichment scores:
 #' rows are samples, columns are scores.
-#' @importFrom generics calculate
+#'
+#'
+#'
 #' @export calculate.default
 #' @export
 
-  calculate.default <- function(x, data, id_col = "sample_id", ...) {
+  calculate.default <- function(x,
+                                data,
+                                id_col = "sample_id",
+                                BPPARAM = SerialParam(progressbar = TRUE),
+                                ...) {
 
     ## expression
 
@@ -115,7 +125,7 @@
     gsva_input <- gsvaParam(exprData = expr_mtx,
                             geneSets = x, ...)
 
-    scores <- gsva(gsva_input)
+    scores <- gsva(gsva_input, BPPARAM = BPPARAM)
 
     ## formatting
 

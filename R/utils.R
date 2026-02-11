@@ -10,6 +10,8 @@
 
     x <- unlist(x)
 
+    x <- x[!is.na(x)]
+
     x <- x[x != '']
 
     unique(unname(x))

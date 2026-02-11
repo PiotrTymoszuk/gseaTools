@@ -5,7 +5,13 @@
 \alias{calculate.dbsig}
 \title{Calculate GSVA scores.}
 \usage{
-\method{calculate}{default}(x, data, id_col = "sample_id", ...)
+\method{calculate}{default}(
+  x,
+  data,
+  id_col = "sample_id",
+  BPPARAM = SerialParam(progressbar = TRUE),
+  ...
+)
 
 \method{calculate}{dbsig}(x, data, id_col = "sample_id", ...)
 }
@@ -16,6 +22,10 @@
 
 \item{id_col}{name of the column to store identifiers/names of the samples
 in the output data frames.}
+
+\item{BPPARAM}{An object of class BiocParallelParam
+(https://www.bioconductor.org/packages//release/bioc/vignettes/BiocParallel/inst/doc/Introduction_To_BiocParallel.html)
+with parameters of paralellization used by \code{\link[GSVA]{gsva}}.}
 
 \item{...}{extra arguments passed to \code{\link[GSVA]{gsvaParam}}.}
 }
